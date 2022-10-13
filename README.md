@@ -11,7 +11,7 @@ gdrive is a command line utility for interacting with Google Drive.
 2. https://console.cloud.google.com/apis/credentials and application type to be Desktop App give some name
 3. In "OAuth consent screen"; User type to External and publish
 4. Get the values for `clientId` and `clientSecret`
-
+5. For linux VM: https://console.cloud.google.com/home/dashboard?cloudshell=true
 
 ## Edit and compile
 
