@@ -20,3 +20,13 @@ gdrive is a command line utility for interacting with Google Drive.
 3. ./compile
 4. copy the bin/gdrive_linux_amd64 to ~/bin
 5. ./gdrive_linux_amd64 about 
+
+```
+
+./bin/gdrive_linux_amd64 about
+Authentication needed
+Go to the following url in your browser:
+http://127.0.0.1:45137/authorize
+
+Waiting for authentication response
+```
