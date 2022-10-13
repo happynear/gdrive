@@ -17,9 +17,8 @@ gdrive is a command line utility for interacting with Google Drive.
 
 1. go version go1.19.1 linux/amd64
 2. Just edit the `clientId` and `clientSecret` in the file `handlers_drive.go`.
-3. ./compile
-4. copy the bin/gdrive_linux_amd64 to ~/bin
-5. ./gdrive_linux_amd64 about 
+3. `./compile`
+4. `./gdrive_linux_amd64 about`
 
 ```
 
