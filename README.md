@@ -28,4 +28,4 @@ http://127.0.0.1:45137/authorize
 
 Waiting for authentication response
 ```
-5. For remote boxes just do the authentication locally and copy the `linux binary` an `~/.config/gdrive/USERNAME_v2.json>` to the remote box.
+5. For remote boxes just do the authentication locally and copy the `linux binary` and `~/.config/gdrive/USERNAME_v2.json>` to the remote box.
