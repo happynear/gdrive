@@ -11,14 +11,17 @@ gdrive is a command line utility for interacting with Google Drive.
 2. https://console.cloud.google.com/apis/credentials and application type to be Desktop App give some name
 3. In "OAuth consent screen"; User type to External and publish
 4. Get the values for `clientId` and `clientSecret`
-5. For linux VM: https://console.cloud.google.com/home/dashboard?cloudshell=true
+5. For Go-preinstalled linux VM use: https://console.cloud.google.com/home/dashboard?cloudshell=true
+or install `go version go1.19.1 linux/amd64` from  https://go.dev/doc/install
 
-## Edit and compile
+## Download and compile
 
-1. go version go1.19.1 linux/amd64
-2. Just edit the `clientId` and `clientSecret` in the file `handlers_drive.go`.
-3. `./compile`
-4. `./gdrive_linux_amd64 about`
+1. `git clone --depth=1 https://github.com/carstentrink/gdrive`
+2. `cd gdrive`
+3. Just edit the `clientId` and `clientSecret` in the file `handlers_drive.go`.
+4. `./compile`
+5. The binaries are located inside `gdrive/bin` folder
+6. `./gdrive_linux_amd64 about`
 
 ```
 ./bin/gdrive_linux_amd64 about
@@ -28,4 +31,6 @@ http://127.0.0.1:45137/authorize
 
 Waiting for authentication response
 ```
-5. For remote boxes just do the authentication locally and copy the `linux binary` and `~/.config/gdrive/USERNAME_v2.json>` to the remote box.
+
+7. Open a browser at the URL
+8. For remote linux boxes just do the authentication locally and copy the `linux binary` and `~/.config/gdrive/USERNAME_v2.json>` to the remote box.
