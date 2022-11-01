@@ -33,4 +33,4 @@ Waiting for authentication response
 ```
 
 7. Open a browser at the URL
-8. For remote linux boxes just do the authentication locally and copy the `linux binary` and `~/.config/gdrive/USERNAME_v2.json>` to the remote box.
+8. For remote linux boxes just do the authentication locally and copy the `linux binary` and `~/.config/gdrive/USERNAME_v2.json` to the remote box.
