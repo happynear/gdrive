@@ -25,6 +25,7 @@ func listHandler(ctx cli.Context) {
 	err := newDrive(args).List(drive.ListFilesArgs{
 		Out:         os.Stdout,
 		MaxFiles:    args.Int64("maxFiles"),
+		Selection:   args.Int64("selection"),
 		NameWidth:   args.Int64("nameWidth"),
 		Query:       args.String("query"),
 		SortOrder:   args.String("sortOrder"),

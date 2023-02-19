@@ -10,15 +10,17 @@ import (
 const Name = "gdrive"
 const Version = "3.0.11"
 
-const DefaultMaxFiles = 30
+const DefaultMaxFiles = 999
+const DefaultSelection = 1
 const DefaultMaxChanges = 100
-const DefaultNameWidth = 40
+const DefaultNameWidth = 69
 const DefaultPathWidth = 60
 const DefaultUploadChunkSize = 8 * 1024 * 1024
 const DefaultTimeout = 5 * 60
 const DefaultQuery = "trashed = false and 'me' in owners"
 const DefaultShareRole = "reader"
 const DefaultShareType = "anyone"
+const DefaultSortOrder = "recency desc"
 
 var DefaultConfigDir = GetDefaultConfigDir()
 
@@ -61,16 +63,23 @@ func main() {
 						Description:  fmt.Sprintf("Max files to list, default: %d", DefaultMaxFiles),
 						DefaultValue: DefaultMaxFiles,
 					},
+					cli.IntFlag{
+						Name:         "selection",
+						Patterns:     []string{"-s", "--selection"},
+						Description:  fmt.Sprintf("List files based on selection: Choose from 1 2 3 4: Default is %d \n    1: all files excl. folders\n    2: all files\n    3: all starred files\n    4: defaults to -q\n    See: https://developers.google.com/drive/api/guides/ref-search-terms\n    https://developers.google.com/drive/search-parameters", DefaultSelection),
+						DefaultValue: DefaultSelection,
+					},
 					cli.StringFlag{
 						Name:         "query",
 						Patterns:     []string{"-q", "--query"},
-						Description:  fmt.Sprintf(`Default query: "%s". See https://developers.google.com/drive/search-parameters`, DefaultQuery),
+						Description:  fmt.Sprintf(`Default query: "%s"`, DefaultQuery),
 						DefaultValue: DefaultQuery,
 					},
 					cli.StringFlag{
 						Name:        "sortOrder",
 						Patterns:    []string{"--order"},
-						Description: "Sort order. See https://godoc.org/google.golang.org/api/drive/v3#FilesListCall.OrderBy",
+						Description: "Sort order: recency desc. See https://godoc.org/google.golang.org/api/drive/v3#FilesListCall.OrderBy",
+						DefaultValue: DefaultSortOrder,
 					},
 					cli.IntFlag{
 						Name:         "nameWidth",

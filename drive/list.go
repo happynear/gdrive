@@ -13,6 +13,7 @@ import (
 type ListFilesArgs struct {
 	Out         io.Writer
 	MaxFiles    int64
+	Selection   int64
 	NameWidth   int64
 	Query       string
 	SortOrder   string
@@ -24,9 +25,10 @@ type ListFilesArgs struct {
 func (self *Drive) List(args ListFilesArgs) (err error) {
 	listArgs := listAllFilesArgs{
 		query:     args.Query,
-		fields:    []googleapi.Field{"nextPageToken", "files(id,name,md5Checksum,mimeType,size,createdTime,parents)"},
+		fields:    []googleapi.Field{"nextPageToken", "files(id,name,md5Checksum,mimeType,size,modifiedTime,parents)"},
 		sortOrder: args.SortOrder,
 		maxFiles:  args.MaxFiles,
+		selection:  args.Selection,
 	}
 	files, err := self.listAllFiles(listArgs)
 	if err != nil {
@@ -61,6 +63,7 @@ type listAllFilesArgs struct {
 	fields    []googleapi.Field
 	sortOrder string
 	maxFiles  int64
+	selection int64
 }
 
 func (self *Drive) listAllFiles(args listAllFilesArgs) ([]*drive.File, error) {
@@ -73,9 +76,22 @@ func (self *Drive) listAllFiles(args listAllFilesArgs) ([]*drive.File, error) {
 		pageSize = 1000
 	}
 
-	controlledStop := fmt.Errorf("Controlled stop")
+	var changeQuery string
 
-	err := self.service.Files.List().SupportsTeamDrives(true).IncludeTeamDriveItems(true).Q(args.query).Fields(args.fields...).OrderBy(args.sortOrder).PageSize(pageSize).Pages(context.TODO(), func(fl *drive.FileList) error {
+	if args.selection == 1 {
+		changeQuery = "( ( visibility = 'anyoneCanFind' or visibility = 'anyoneWithLink' or visibility = 'domainCanFind' or visibility = 'domainWithLink' or visibility = 'limited' ) ) and trashed = false and ( mimeType != 'application/vnd.google-apps.folder' )"
+	} else if args.selection == 2 {
+		changeQuery = "( ( visibility = 'anyoneCanFind' or visibility = 'anyoneWithLink' or visibility = 'domainCanFind' or visibility = 'domainWithLink' or visibility = 'limited' ) and trashed = false ) "
+	} else if args.selection == 3 {
+		changeQuery = "( ( visibility = 'anyoneCanFind' or visibility = 'anyoneWithLink' or visibility = 'domainCanFind' or visibility = 'domainWithLink' or visibility = 'limited' ) ) and starred = true and trashed = false and ( mimeType != 'application/vnd.google-apps.folder' )"
+	} else {
+		changeQuery = args.query
+	}
+
+   controlledStop := fmt.Errorf("Controlled stop")
+
+   err := self.service.Files.List().SupportsTeamDrives(true).IncludeItemsFromAllDrives(true).IncludeTeamDriveItems(true).Q(changeQuery).Fields(args.fields...).OrderBy(args.sortOrder).PageSize(pageSize).Pages(context.TODO(), func(fl *drive.FileList) error {
+
 		files = append(files, fl.Files...)
 
 		// Stop when we have all the files we need
@@ -111,16 +127,16 @@ func PrintFileList(args PrintFileListArgs) {
 	w.Init(args.Out, 0, 0, 3, ' ', 0)
 
 	if !args.SkipHeader {
-		fmt.Fprintln(w, "Id\tName\tType\tSize\tCreated")
+		fmt.Fprintln(w, "Id Name Type Size ModifiedTime")
 	}
 
 	for _, f := range args.Files {
-		fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n",
+		fmt.Fprintf(w, "%s %s %s %s %s\n",
 			f.Id,
 			truncateString(f.Name, args.NameWidth),
 			filetype(f),
 			formatSize(f.Size, args.SizeInBytes),
-			formatDatetime(f.CreatedTime),
+			formatDatetime(f.ModifiedTime),
 		)
 	}
 
