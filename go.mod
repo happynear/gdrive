@@ -1,4 +1,4 @@
-module github.com/happynear/gdrive
+module github.com/msfjarvis/gdrive
 
 go 1.18
 
